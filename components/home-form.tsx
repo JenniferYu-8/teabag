@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { ReactMic } from "react-mic";
+import Image from 'next/image';
 
 export default function HomeForm() {
   const [firstDropdown, setFirstDropdown] = useState("");
@@ -28,6 +29,7 @@ export default function HomeForm() {
 
   return (
     <div>
+      <Image src="" alt="Teabag logo"></Image>
       <h1>Form with Dropdowns and Audio Recorder</h1>
       <form onSubmit={handleSubmit}>
         {/* Dropdown 1 */}
