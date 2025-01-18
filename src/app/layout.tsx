@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${fb.className} bg-[#E3B491] text-gray-950 pt-28`}>
+      <body className={`${fb.className} bg-[#E3B491] text-gray-950 pt-16`}>
         <HomeForm/>
         {children}
       </body>
