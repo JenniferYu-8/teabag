@@ -86,6 +86,15 @@ export default function HomeForm() {
               } catch (error) {
                 console.error("Error updating document: ", error);
               }
+              try {
+                await updateDoc(docRef2, {
+                  "results": {
+                    yap: result,
+                  }
+                });  
+              } catch (error) {
+                console.error("Error updating session count: ", error);
+              }
             }
             else {
               try {
@@ -99,6 +108,17 @@ export default function HomeForm() {
               } catch (error) {
                 console.error("Error updating session count: ", error);
               }
+
+              try {
+                await updateDoc(docRef, {
+                  "results": {
+                    yap: result,
+                  }
+                });  
+              } catch (error) {
+                console.error("Error updating session count: ", error);
+              }
+
             }
           } else {
             try {
@@ -113,6 +133,17 @@ export default function HomeForm() {
             } catch (error) {
               console.error("Error adding document: ", error);
             }
+
+            try {
+              await updateDoc(docRef, {
+                "results": {
+                  yap: result,
+                }
+              });  
+            } catch (error) {
+              console.error("Error updating session count: ", error);
+            }
+
           } 
 
     // After successful submission, redirect to results page
