@@ -8,6 +8,9 @@ import app from "../firebase/clientApp";
 import firebase from "firebase/compat/app";
 import { getFirestore, addDoc, doc, setDoc, getDoc, updateDoc, collection, Firestore, QuerySnapshot, DocumentData } from "firebase/firestore";
 import { BsFillTrashFill } from "react-icons/bs";
+import { BsFillStopCircleFill } from "react-icons/bs";
+import { BsFillRecordFill } from "react-icons/bs";
+
 
 require('dotenv').config();
 
@@ -173,16 +176,16 @@ export default function HomeForm() {
                 record={isRecording}
                 onStop={handleStopRecording}
                 mimeType="audio/webm"
-                className="w-[325] h-12 rounded-md"
+                className="w-[160] h-12 rounded-md"
               />
-              <div className="flex gap-2 mt-2 w-100">
+              <div className="flex gap-16 mt-2 w-100">
                 <button
                   type="button"
                   onClick={handleStartRecording}
                   disabled={isRecording}
                   className="px-4 py-2 bg-[#C2D02F] text-black rounded hover:bg-[#AFBC29] disabled:bg-gray-300"
                 >
-                  Start Recording
+                 <BsFillRecordFill />
                 </button>
                 <button
                   type="button"
@@ -190,13 +193,15 @@ export default function HomeForm() {
                   disabled={!isRecording}
                   className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-gray-300"
                 >
-                  Stop Recording
+                  <BsFillStopCircleFill />
                 </button>
               </div>
               {audioURL && (
                 <div className="mt-4">
                   <h4>Recorded Audio:</h4>
-                  <audio controls src={audioURL}></audio>
+                  <audio controls src={audioURL}
+                  className="w-[160]"
+                  ></audio>
                   <div className="flex gap-2 mt-2">
                     <button
                       type="button"
@@ -220,7 +225,7 @@ export default function HomeForm() {
               <textarea
                 value={textareaValue}
                 onChange={(e) => setTextareaValue(e.target.value)}
-                className="w-full h-32 p-2 border border-gray-300 rounded-md"
+                className="w-full h-full p-2 border border-gray-300 rounded-md"
               ></textarea>
             </div>
           </div>
