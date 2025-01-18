@@ -1,4 +1,3 @@
-// pages/results/index.tsx
 "use client";
 
 import { useEffect, useState } from "react";
@@ -39,32 +38,37 @@ export default function Page() {
   }, [name]); // Re-run the effect when 'name' changes
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="flex justify-center items-center h-screen text-lg">Loading...</div>;
   }
 
   if (!yapData) {
-    return <div>No data available for {name}</div>;
+    return <div className="flex justify-center items-center h-screen text-lg">No data available for {name}</div>;
   }
 
   return (
-    <div>
-      <h1>Results for {yapData.name}</h1>
-      <ul>
-        {Object.keys(yapData).map((sessionKey) => (
-          <li key={sessionKey}>
-            <h2>{sessionKey}</h2>
-            <p>{yapData[sessionKey].yap}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <section className="bg-gray-50 min-h-screen p-6">
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 space-y-6">
+        <h1 className="text-3xl font-semibold text-gray-800">Results for {yapData.name}</h1>
+        <ul className="space-y-4">
+          {Object.keys(yapData).map((sessionKey) => (
+            <li key={sessionKey} className="bg-gray-100 p-4 rounded-lg shadow-sm">
+              <h2 className="text-xl font-medium text-gray-700">{sessionKey}</h2>
+              <p className="text-gray-600">{yapData[sessionKey].yap}</p>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
   );
 }
+
+
 
 // // pages/results/index.tsx
 // "use client";
 
 // import { useEffect, useState } from "react";
+// import { useSearchParams } from "next/navigation"; // Import useSearchParams to get query parameters
 // import { getFirestore, doc, getDoc } from "firebase/firestore";
 // import app from "../../../firebase/clientApp"; // Adjust the path based on your project structure
 
@@ -72,14 +76,19 @@ export default function Page() {
 //   const [yapData, setYapData] = useState<any>(null);
 //   const [loading, setLoading] = useState(true);
 
+//   const searchParams = useSearchParams();
+//   const name = searchParams.get("name"); // Extract the 'name' parameter from the query string
+
 //   useEffect(() => {
+//     // Fetch data only if 'name' is available in the query
+//     if (!name) return;
+
 //     const fetchData = async () => {
 //       try {
-//         // Assuming `name` is passed as a query parameter or stored somehow
-//         const name = "someUser"; // Replace with dynamic logic based on user input
 //         const db = getFirestore(app);
-//         const docRef = doc(db, "yap", name.toLowerCase());
+//         const docRef = doc(db, "yap", Array.isArray(name) ? name[0].toLowerCase() : name.toLowerCase()); // Handle case where 'name' might be an array
 //         const docSnapshot = await getDoc(docRef);
+
 //         if (docSnapshot.exists()) {
 //           setYapData(docSnapshot.data());
 //         } else {
@@ -93,27 +102,30 @@ export default function Page() {
 //     };
 
 //     fetchData();
-//   }, []); // Empty dependency array to run once when the component mounts
+//   }, [name]); // Re-run the effect when 'name' changes
 
 //   if (loading) {
 //     return <div>Loading...</div>;
 //   }
 
 //   if (!yapData) {
-//     return <div>No data available</div>;
+//     return <div>No data available for {name}</div>;
 //   }
 
 //   return (
-//     <div>
-//       <h1>Results for {yapData.name}</h1>
-//       <ul>
-//         {Object.keys(yapData).map((sessionKey) => (
-//           <li key={sessionKey}>
-//             <h2>{sessionKey}</h2>
-//             <p>{yapData[sessionKey].yap}</p>
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
+//     <section className="bg-gray-50">
+//       <div className="flex flex-col items-center justify-center text-center">
+//         <h1>Results for {yapData.name}</h1>
+//         <ul>
+//           {Object.keys(yapData).map((sessionKey) => (
+//             <li key={sessionKey}>
+//               <h2>{sessionKey}</h2>
+//               <p>{yapData[sessionKey].yap}</p>
+//             </li>
+//           ))}
+//         </ul>
+//       </div>
+//     </section>
 //   );
 // }
+
