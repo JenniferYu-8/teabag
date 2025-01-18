@@ -89,7 +89,6 @@ export default function HomeForm() {
         </div>
 
         <form onSubmit={onSubmit} className="mt-5 flex flex-col gap-3">
-          {/* Dropdown 1 */}
           <label className="flex flex-col">
             Yapper's name
             <input
@@ -133,13 +132,14 @@ export default function HomeForm() {
                 record={isRecording}
                 onStop={handleStopRecording}
                 mimeType="audio/webm"
+                className="w-[325] h-12"
               />
-              <div className="flex gap-2 mt-2">
+              <div className="flex gap-2 mt-2 w-100">
                 <button
                   type="button"
                   onClick={handleStartRecording}
                   disabled={isRecording}
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300"
+                  className="px-4 py-2 bg-[#C2D02F] text-black rounded hover:bg-[#AFBC29] disabled:bg-gray-300"
                 >
                   Start Recording
                 </button>
@@ -170,7 +170,6 @@ export default function HomeForm() {
               ></textarea>
             </div>
           </div>
-
 
           <button type="submit">Submit</button>
         </form>
