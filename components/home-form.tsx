@@ -48,40 +48,72 @@ export default function HomeForm() {
           'Content-Type': 'application/json',
       },
       body: JSON.stringify({yap: textareaValue ? textareaValue : audioURL }),
-  });
+    });
 
-  const result = await response.json();
-  console.log(result); // Handle the response from the backend
+    const result = await response.json();
 
     const docRef = doc(db, "yaps", name.toLowerCase());
 
     const docSnapshot = await getDoc(docRef);
-
     if (docSnapshot.exists()) {
-      const data = docSnapshot.data();
-      const sessionCount = Object.keys(data).filter(key => key.startsWith('Session')).length;
-      const sessionField = `Session ${sessionCount + 1}`;
-      await updateDoc(docRef, {
-        [sessionField]: {
-          name,
-          secondDropdown,
-          yap: textareaValue ? textareaValue : audioURL,
-        }
-      });
-    } else {
-      try {
-        await setDoc(docRef, {
-          "Session 1": {
-            name,
-            secondDropdown,
-            yap: textareaValue ? textareaValue : audioURL,
-          }
-        });
-        console.log("Document written with custom ID: ", docRef.id);
-      } catch (error) {
-        console.error("Error adding document: ", error);
-      }
-    }
+            // Access the document ID
+            const data = docSnapshot.data();
+            const sessionCount = Object.keys(data).filter(key => key.startsWith('Session')).length;
+            if (secondDropdown !== "Nope, this is a new yap session") {
+              //this one is getting the previous shit addded to the new shit
+              const docRef2 = doc(db, "yaps", name.toLowerCase())
+              const fieldValue = docSnapshot.data()[secondDropdown]?.yap;
+              const combinedValue = `${fieldValue} ${textareaValue || audioURL}`;
+              console.log(combinedValue)
+              
+              //calls api to make new updated thingy
+              const response = await fetch('http://127.0.0.1:5000/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({yap: combinedValue}),
+              });
+          
+              const result = await response.json();          
+              console.log("WORKED!")
+              //updates the yap on the same drop down
+              try {
+                await updateDoc(docRef2, {
+                  [`${secondDropdown}.yap`]: result, // textareaValue takes precedence
+      
+                }); 
+              } catch (error) {
+                console.error("Error updating document: ", error);
+              }
+            }
+            else {
+              try {
+                await updateDoc(docRef, {
+                  [`Session ${String(sessionCount + 1)}`]: {
+                    name,
+                    secondDropdown,
+                    yap: result,
+                  }
+                });  
+              } catch (error) {
+                console.error("Error updating session count: ", error);
+              }
+            }
+          } else {
+            try {
+              await setDoc(docRef, {
+              "Session 1": {
+                name,
+                secondDropdown,
+                yap: result,
+              },
+              });
+              console.log("Document written with custom ID: ", docRef.id);
+            } catch (error) {
+              console.error("Error adding document: ", error);
+            }
+          } 
 
     // After successful submission, redirect to results page
     router.push("/results");
