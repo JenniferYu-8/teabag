@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation"; // Import useSearchParams to get query parameters
+import { useSearchParams } from "next/navigation"; // Import useSearchParams to get query parameters
 import { getFirestore, doc, getDoc } from "firebase/firestore";
 import app from "../../../firebase/clientApp"; // Adjust the path based on your project structure
 
@@ -10,7 +10,6 @@ export default function Page() {
   const [yapData, setYapData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  const router = useRouter();
   const searchParams = useSearchParams();
   const name = searchParams.get("name"); // Extract the 'name' parameter from the query string
 
