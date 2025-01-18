@@ -58,11 +58,6 @@ export default function HomeForm() {
       return;
     }
 
-    // if (!name || name === "" || (textareaValue === "" && audioURL === "")) {
-    //   alert("Please record audio or enter text.");
-    //   return;
-    // }
-
     if (docSnapshot.exists()) {
       // Access the document ID
       const data = docSnapshot.data();
@@ -72,7 +67,7 @@ export default function HomeForm() {
         const docRef2 = doc(db, "yaps", name.toLowerCase());
         try {
           await updateDoc(docRef2, {
-            [`${secondDropdown}.yap`]: textareaValue ? textareaValue : audioURL,
+            [`${secondDropdown}.yap`]: textareaValue ? textareaValue : audioURL, // textareaValue takes precedence
 
           }); 
         } catch (error) {
@@ -128,11 +123,11 @@ export default function HomeForm() {
   return (
     <section>
       <div className="flex flex-col items-center justify-center">
-        <div className="pb-1">
+        <div>
           <Image src="/teabag.png" alt="Teabag logo" width="192" height="192" quality="95"></Image>
         </div>
 
-        <form className="mt-5 flex flex-col gap-3">
+        <form className="mt-3 flex flex-col gap-3">
           <label className="flex flex-col">
             Yapper's name
             <input
