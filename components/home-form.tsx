@@ -18,6 +18,7 @@ export default function HomeForm() {
   const [audioURL, setAudioURL] = useState("");
   const [useTextarea, setUseTextarea] = useState(false);
   const [textareaValue, setTextareaValue] = useState("");
+  const [sessionsForUser, setSessionsForUser] = useState<string[]>([]); ;
 
   const handleStartRecording = () => setIsRecording(true);
   const handleStopRecording = (recordedBlob: { blob: Blob | MediaSource; }) => {
@@ -76,8 +77,12 @@ export default function HomeForm() {
     if (docSnapshot.exists()) {
       // Access the document data
       const data = docSnapshot.data();
-      const sessionCount = Object.keys(data);
-      console.log(sessionCount);
+      let sessionCount = Object.keys(data);
+      setSessionsForUser(sessionCount); 
+      console.log(sessionCount);  
+    }
+    else {
+      setSessionsForUser([]); 
     }
   };
     
@@ -120,8 +125,10 @@ export default function HomeForm() {
               </option>
               
               <option value="new-yap">Nope, this is a new yap session</option>
-              <option value="yap-1">Yap 1</option>
-            </select>
+              {sessionsForUser.map((user) => (
+                  <option key={user} value={user}>{user}</option>
+              ))} 
+              </select>
           </label>
           <br />
 
