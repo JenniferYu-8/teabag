@@ -5,6 +5,7 @@ import app from "../../firebase/clientApp";
 import firebase from "firebase/compat/app";
 import { getFirestore, collection, Firestore, QuerySnapshot, DocumentData } from "firebase/firestore";
 
+require('dotenv').config();
 
 export default function Home() {
   const db = getFirestore(app);
