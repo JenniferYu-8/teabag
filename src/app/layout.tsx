@@ -1,8 +1,11 @@
-import { Inter } from 'next/font/google';
+import { Indie_Flower } from 'next/font/google';
 import "./globals.css";
 import HomeForm from "../../components/home-form";
 
-const inter = Inter({subsets : ['latin']})
+const indie_flower = Indie_Flower({
+  subsets: ["latin"],
+  weight: '400'
+});
 
 export default function RootLayout({
   children,
@@ -11,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>
+      <body className={`${indie_flower.className}`}>
         <HomeForm/>
         {children}
       </body>
