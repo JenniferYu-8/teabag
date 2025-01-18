@@ -1,6 +1,10 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS  # Import CORS to handle cross-origin requests
 import cohere
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
 
@@ -21,8 +25,11 @@ def chatbot():
     data = request.json  # Assuming the front end sends JSON data
     yap = data.get('yap')
 
-    # Initialize the Cohere client with your API key
-    co = cohere.ClientV2("EdRuVzzwK1bU6ekvOr2qqu5PZMTlp3wnHs9MFXtk")
+    # Get the API key from environment variables
+    api_key = os.getenv("COHERE_API_KEY")
+
+    # Use the API key to initialize the Cohere client
+    co = cohere.ClientV2(api_key)
 
     # Define the unorganized story you want to reorganize
     unorganized_story = """
@@ -37,7 +44,7 @@ def chatbot():
     response = co.chat(
         model="command-r-plus",  # Adjust this model to one that's best for your needs
         messages=[
-        {"role": "user", "content": "You are an expert at reorganizing confusing stories. The following story is very long and unorganized" + yap + "Reorganize the story into a coherent, chronological sequence without changing the original wording and tone. Keep the same manner of speech, just reassemble the story in a way that makes sense."}]
+        {"role": "user", "content": "You are an expert at reorganizing confusing stories.\nThe following story is very long and unorganized\n" + yap + "\nReorganize the story into a coherent, chronological sequence without changing the original wording and tone. Keep the same manner of speech, just reassemble the story in a way that makes sense."}]
     )
 
     # Return the response from Cohere API as JSON
