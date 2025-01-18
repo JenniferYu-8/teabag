@@ -15,7 +15,7 @@ prompt_template = PromptTemplate(
     template=(
         "You are an expert at reorganizing confusing stories. The following story is very long and unorganized: \n"
         "{story}\n"
-        "Reorganize the story into a coherent, chronological sequence while preserving the original wording and tone."
+        "Reorganize the story into a coherent, chronological sequence without changing the original wording and tone. Keep the same manner of speech, just reassemble the story in a way that makes sense."
     )
 )
 
@@ -45,52 +45,3 @@ if __name__ == "__main__":
     organized_story = reorganize_story(unorganized_story)
     print("Reorganized Story:\n")
     print(organized_story)
-
-
-# from langchain.text_splitter import RecursiveCharacterTextSplitter
-# from langchain_community.llms import OpenAI
-# from langchain_community.embeddings import OpenAIEmbeddings
-# from langchain import PromptTemplate
-# from langchain.chains import LLMChain
-# from langchain_community.vectorstores import FAISS
-
-# from dotenv import load_dotenv
-
-# load_dotenv()
-
-# load_dotenv()
-# embeddings = OpenAIEmbeddings()
-
-# def create_vector_db_from_story(transcript) -> FAISS:
-#     text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
-#     # docs = text_splitter.split_documents(transcript)
-
-#     db = FAISS.from_documents(transcript, embeddings)
-#     return db
-
-# def get_response_from_query(db, query, k=4):
-#     docs = db.similarity_search(query, k=k)
-#     docs_page_content = " ".join([d.page_content for d in docs])
-#     llm = OpenAI(model_name="gpt-3.5-turbo-instruct")
-
-#     prompt = PromptTemplate(
-#         input_variables=["question", "docs"],
-#         template="""
-#         You are given a story from my perspective, but it is slightly out of order. 
-        
-#         Don't change the wording too much, but order the sentences so that the listener can follow along.
-#         """,
-#     )
-
-#     chain = LLMChain(llm=llm, prompt=prompt)
-
-#     response = chain.run(question=query, docs=docs_page_content)
-#     response = response.replace("\n", "")
-#     return response
-
-# transcript = """
-# Oh my gosh, the other day, I saw this guy on campus and he was SO FINE. I couldn't get his name, and I was so sad, but yesterday, during the Vietnamese Student Association event, I saw him. I walked up to him and it was loud but I was able to get his name: Ferdinand! We met at orientation week briefly but it was very brief. Also, it took me 3 tries to hear his name because it was so loud. Also, I saw him in lecture once and he was sitting at the back eating a burrito and my god it was so hot. I also tripped over the curb last week while he was walking by me because I was staring at his gorgeous eyes. Also, my friend Ethan apparently knew of him since Grade 9. They were roommates but he's not gonna hook me up. Also, Ethan and I are beefing.
-# """
-# print(create_vector_db_from_story(transcript))
-
-
