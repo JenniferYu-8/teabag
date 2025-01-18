@@ -1,8 +1,8 @@
-import { Indie_Flower } from 'next/font/google';
+import { Fuzzy_Bubbles } from 'next/font/google';
 import "./globals.css";
 import HomeForm from "../../components/home-form";
 
-const indie_flower = Indie_Flower({
+const fb = Fuzzy_Bubbles({
   subsets: ["latin"],
   weight: '400'
 });
@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${indie_flower.className}`}>
+      <body className={`${fb.className}`}>
         <HomeForm/>
         {children}
       </body>
