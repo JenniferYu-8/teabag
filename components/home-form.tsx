@@ -41,6 +41,17 @@ export default function HomeForm() {
       alert("Please record audio or enter text.");
       return;
     }
+    //checks fetching the reordered shit
+    const response = await fetch('http://127.0.0.1:5000/', {
+      method: 'POST',
+      headers: {
+          'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({yap: textareaValue ? textareaValue : audioURL }),
+  });
+
+  const result = await response.json();
+  console.log(result); // Handle the response from the backend
 
     const docRef = doc(db, "yaps", name.toLowerCase());
 
