@@ -12,7 +12,7 @@ require('dotenv').config();
 
 
 export default function HomeForm() {
-  const [firstDropdown, setFirstDropdown] = useState("");
+  const [name, setName] = useState("");
   const [secondDropdown, setSecondDropdown] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState("");
@@ -28,7 +28,7 @@ export default function HomeForm() {
   const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     console.log({
-      firstDropdown,
+      name,
       secondDropdown,
       audioURL: useTextarea ? textareaValue : audioURL,
     });
@@ -55,7 +55,7 @@ export default function HomeForm() {
       const sessionCount = Object.keys(data).filter(key => key.startsWith('Session')).length;
       await updateDoc(docRef, {
         [`Session ${String(sessionCount + 1)}`]: {
-          firstDropdown,
+          name,
           secondDropdown,
           audioURL: useTextarea ? textareaValue : audioURL,
         }
@@ -64,7 +64,7 @@ export default function HomeForm() {
       try {
         await setDoc(docRef, {
         "Session 1": {
-          firstDropdown,
+          name,
           secondDropdown,
           audioURL: useTextarea ? textareaValue : audioURL,
         },
@@ -86,19 +86,15 @@ export default function HomeForm() {
         <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-3">
           {/* Dropdown 1 */}
           <label className="flex flex-col">
-            Who is doing all this yapping?
-            <select
-              value={firstDropdown}
-              onChange={(e) => setFirstDropdown(e.target.value)}
+            Enter your name:
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
               required
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            >
-              <option value="" disabled>
-                Select...
-              </option>
-              <option value="me">Me</option>
-              <option value="other">I gotta summarize someone else's yap</option>
-            </select>
+              placeholder="Enter your name"
+            />
           </label>
           <br />
 
