@@ -39,9 +39,29 @@ export default function HomeForm() {
   //add feature
   const onSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault(); // remove later?
+    console.log(textareaValue);
+    console.log(audioURL);
 
     const docRef = doc(db, "yaps", name.toLowerCase());
     const docSnapshot = await getDoc(docRef);
+
+    // Validate the name and ensure it is not empty
+    const trimmedName = name.trim();
+    if (!trimmedName) {
+      alert("Please enter a name.");
+      return;
+    }
+
+    // Validate that either textareaValue or audioURL has content
+    if (!textareaValue.trim() && !audioURL) {
+      alert("Please record audio or enter text.");
+      return;
+    }
+
+    // if (!name || name === "" || (textareaValue === "" && audioURL === "")) {
+    //   alert("Please record audio or enter text.");
+    //   return;
+    // }
 
     if (docSnapshot.exists()) {
       // Access the document ID
@@ -196,7 +216,7 @@ export default function HomeForm() {
         {/* Submit Button */}
         <button
           type="submit"
-          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+          className="px-4 py-2 bg-[#C2D02F] text-black rounded hover:bg-[#AFBC29] border border-gray-900"
           onClick={onSubmit}
         >
           Submit
