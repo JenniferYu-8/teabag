@@ -78,12 +78,12 @@ export default function HomeForm() {
   
   return (
     <section>
-      <div className="flex flex-col items-center justify-center text-center">
-        <div className="pb-5">
+      <div className="flex flex-col items-center justify-center">
+        <div className="pb-1">
           <Image src="/teabag.png" alt="Teabag logo" width="192" height="192" quality="95"></Image>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-3">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-">
           {/* Dropdown 1 */}
           <label className="flex flex-col">
             Yapper's name
@@ -92,7 +92,7 @@ export default function HomeForm() {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="h-14"
+              className="p-2.5 rounded-full bg-gray-100 focus:bg-gray-50"
             />
           </label>
           <br />
@@ -104,6 +104,7 @@ export default function HomeForm() {
               value={secondDropdown}
               onChange={(e) => setSecondDropdown(e.target.value)}
               required
+              className="p-2.5 bg-gray-100 focus:bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-full"
             >
               <option value="" disabled>
                 Select...
@@ -114,59 +115,52 @@ export default function HomeForm() {
           </label>
           <br />
 
-          {/* Toggle between Audio Recorder and Textarea */}
-          <label>
-            Use Textarea Instead of Recorder:
-            <input
-              type="checkbox"
-              checked={useTextarea}
-              onChange={() => setUseTextarea(!useTextarea)}
-            />
-          </label>
-          <br />
-
-          {!useTextarea ? (
-            <>
-              {/* Audio Recorder */}
+          <div className="flex flex-col md:flex-row gap-8">
+            {/* Audio Recorder */}
+            <div className="flex flex-col items-start">
+              <h3>Audio Recorder</h3>
               <ReactMic
                 record={isRecording}
                 onStop={handleStopRecording}
                 mimeType="audio/webm"
               />
-              <button
-                type="button"
-                onClick={handleStartRecording}
-                disabled={isRecording}
-              >
-                Start Recording
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsRecording(false)}
-                disabled={!isRecording}
-              >
-                Stop Recording
-              </button>
+              <div className="flex gap-2 mt-2">
+                <button
+                  type="button"
+                  onClick={handleStartRecording}
+                  disabled={isRecording}
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300"
+                >
+                  Start Recording
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsRecording(false)}
+                  disabled={!isRecording}
+                  className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-gray-300"
+                >
+                  Stop Recording
+                </button>
+              </div>
               {audioURL && (
-                <div>
-                  <h3>Recorded Audio:</h3>
+                <div className="mt-4">
+                  <h4>Recorded Audio:</h4>
                   <audio controls src={audioURL}></audio>
                 </div>
               )}
-            </>
-          ) : (
-            <>
-              {/* Textarea */}
-              <label>
-                Enter text:
-                <textarea
-                  value={textareaValue}
-                  onChange={(e) => setTextareaValue(e.target.value)}
-                />
-              </label>
-            </>
-          )}
-          <br />
+            </div>
+
+            {/* Textarea */}
+            <div className="flex flex-col items-start">
+              <h3>Enter Text</h3>
+              <textarea
+                value={textareaValue}
+                onChange={(e) => setTextareaValue(e.target.value)}
+                className="w-full h-32 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+              ></textarea>
+            </div>
+          </div>
+
 
           <button type="submit" onClick={onSubmit}>Submit</button>
         </form>
