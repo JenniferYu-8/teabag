@@ -7,6 +7,7 @@ import {useCollection} from "react-firebase-hooks/firestore"
 import app from "../firebase/clientApp";
 import firebase from "firebase/compat/app";
 import { getFirestore, addDoc, doc, setDoc, getDoc, updateDoc, collection, Firestore, QuerySnapshot, DocumentData } from "firebase/firestore";
+import { BsFillTrashFill } from "react-icons/bs";
 
 require('dotenv').config();
 
@@ -16,7 +17,6 @@ export default function HomeForm() {
   const [secondDropdown, setSecondDropdown] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [audioURL, setAudioURL] = useState("");
-  const [useTextarea, setUseTextarea] = useState(false);
   const [textareaValue, setTextareaValue] = useState("");
   const [sessionsForUser, setSessionsForUser] = useState<string[]>([]); ;
 
@@ -38,6 +38,8 @@ export default function HomeForm() {
 
   //add feature
   const onSubmit = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault(); // remove later?
+
     const docRef = doc(db, "yaps", name.toLowerCase());
     const docSnapshot = await getDoc(docRef);
 
@@ -50,7 +52,8 @@ export default function HomeForm() {
         const docRef2 = doc(db, "yaps", name.toLowerCase());
         try {
           await updateDoc(docRef2, {
-            [`${secondDropdown}.audioURL`]: useTextarea ? textareaValue : audioURL
+            [`${secondDropdown}.yap`]: textareaValue ? textareaValue : audioURL,
+
           }); 
         } catch (error) {
           console.error("Error updating document: ", error);
@@ -62,7 +65,7 @@ export default function HomeForm() {
             [`Session ${String(sessionCount + 1)}`]: {
               name,
               secondDropdown,
-              audioURL: useTextarea ? textareaValue : audioURL,
+              yap: textareaValue ? textareaValue : audioURL,
             }
           });  
         } catch (error) {
@@ -72,11 +75,11 @@ export default function HomeForm() {
     } else {
       try {
         await setDoc(docRef, {
-          "Session 1": {
-            name,
-            secondDropdown,
-            audioURL: useTextarea ? textareaValue : audioURL,
-          },
+        "Session 1": {
+          name,
+          secondDropdown,
+          yap: textareaValue ? textareaValue : audioURL,
+        },
         });
         console.log("Document written with custom ID: ", docRef.id);
       } catch (error) {
@@ -155,7 +158,7 @@ export default function HomeForm() {
                 record={isRecording}
                 onStop={handleStopRecording}
                 mimeType="audio/webm"
-                className="w-[325] h-12"
+                className="w-[325] h-12 rounded-md"
               />
               <div className="flex gap-2 mt-2 w-100">
                 <button
@@ -179,8 +182,21 @@ export default function HomeForm() {
                 <div className="mt-4">
                   <h4>Recorded Audio:</h4>
                   <audio controls src={audioURL}></audio>
+                  <div className="flex gap-2 mt-2">
+                    <button
+                      type="button"
+                      onClick={() => setAudioURL("")}
+                      className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                    >
+                      <BsFillTrashFill />
+                    </button>
+                  </div>
                 </div>
               )}
+            </div>
+
+            <div>
+              <p className="py-[50]">OR</p>
             </div>
 
             {/* Textarea */}
@@ -189,12 +205,20 @@ export default function HomeForm() {
               <textarea
                 value={textareaValue}
                 onChange={(e) => setTextareaValue(e.target.value)}
-                className="w-full h-32 p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                className="w-full h-32 p-2 border border-gray-300 rounded-md"
               ></textarea>
             </div>
           </div>
 
-          <button onClick={onSubmit} type="submit">Submit</button>
+        {/* Submit Button */}
+        <button
+          type="submit"
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+          onClick={onSubmit}
+        >
+          Submit
+        </button>
+
         </form>
       </div>
 
