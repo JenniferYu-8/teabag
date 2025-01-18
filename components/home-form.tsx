@@ -47,33 +47,52 @@ export default function HomeForm() {
     const docSnapshot = await getDoc(docRef);
 
     if (docSnapshot.exists()) {
+      // Access the document ID
       const data = docSnapshot.data();
       const sessionCount = Object.keys(data).filter(key => key.startsWith('Session')).length;
-      const sessionField = `Session ${sessionCount + 1}`;
-      await updateDoc(docRef, {
-        [sessionField]: {
-          name,
-          secondDropdown,
-          yap: textareaValue ? textareaValue : audioURL,
+      if (secondDropdown !== "Nope, this is a new yap session") {
+        console.log("WORKED!")
+        const docRef2 = doc(db, "yaps", name.toLowerCase());
+        try {
+          await updateDoc(docRef2, {
+            [`${secondDropdown}.yap`]: textareaValue ? textareaValue : audioURL, // textareaValue takes precedence
+
+          }); 
+        } catch (error) {
+          console.error("Error updating document: ", error);
         }
-      });
+      }
+      else {
+        try {
+          await updateDoc(docRef, {
+            [`Session ${String(sessionCount + 1)}`]: {
+              name,
+              secondDropdown,
+              yap: textareaValue ? textareaValue : audioURL,
+            }
+          });  
+        } catch (error) {
+          console.error("Error updating session count: ", error);
+        }
+      }
     } else {
       try {
         await setDoc(docRef, {
-          "Session 1": {
-            name,
-            secondDropdown,
-            yap: textareaValue ? textareaValue : audioURL,
-          }
+        "Session 1": {
+          name,
+          secondDropdown,
+          yap: textareaValue ? textareaValue : audioURL,
+        },
         });
         console.log("Document written with custom ID: ", docRef.id);
       } catch (error) {
         console.error("Error adding document: ", error);
       }
-    }
+    } 
 
     // After successful submission, redirect to results page
-    router.push("/results");
+    // router.push(`/results`);
+    router.push(`/results?name=${name}`);
   };
 
     //add onChangeName feature
