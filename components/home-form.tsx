@@ -3,6 +3,13 @@
 import React, { useState } from "react";
 import { ReactMic } from "react-mic";
 import Image from 'next/image';
+import {useCollection} from "react-firebase-hooks/firestore"
+import app from "../firebase/clientApp";
+import firebase from "firebase/compat/app";
+import { getFirestore, addDoc, doc, setDoc, getDoc, updateDoc, collection, Firestore, QuerySnapshot, DocumentData } from "firebase/firestore";
+
+require('dotenv').config();
+
 
 export default function HomeForm() {
   const [firstDropdown, setFirstDropdown] = useState("");
@@ -27,6 +34,48 @@ export default function HomeForm() {
     });
   };
 
+  //backend starts here
+  const db = getFirestore(app);
+  const yapsCollectionRef = collection(db, "yaps");
+  // const [yapData, yapLoading, yapError] = useCollection(yapsCollectionRef, {});
+  // const user = "wooooo";
+    
+  // if (!yapLoading && yapData) {
+  //   yapData.docs.map((doc) => console.log(doc.data()));
+  // }
+
+  //add feature
+  const onSubmit = async (e: { preventDefault: () => void; }) => {
+    const docRef = doc(db, "yaps", "james");
+    const docSnapshot = await getDoc(docRef);
+
+    if (docSnapshot.exists()) {
+      // Access the document ID
+      const data = docSnapshot.data();
+      const sessionCount = Object.keys(data).filter(key => key.startsWith('Session')).length;
+      await updateDoc(docRef, {
+        [`Session ${String(sessionCount + 1)}`]: {
+          firstDropdown,
+          secondDropdown,
+          audioURL: useTextarea ? textareaValue : audioURL,
+        }
+      });  
+    } else {
+      try {
+        await setDoc(docRef, {
+        "Session 1": {
+          firstDropdown,
+          secondDropdown,
+          audioURL: useTextarea ? textareaValue : audioURL,
+        },
+        });
+        console.log("Document written with custom ID: ", docRef.id);
+      } catch (error) {
+        console.error("Error adding document: ", error);
+      }
+    } 
+  }
+  
   return (
     <section>
       <div className="flex flex-col items-center justify-center text-center">
@@ -124,7 +173,7 @@ export default function HomeForm() {
           )}
           <br />
 
-          <button type="submit">Submit</button>
+          <button type="submit" onClick={onSubmit}>Submit</button>
         </form>
       </div>
 
