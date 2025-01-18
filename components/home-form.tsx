@@ -67,13 +67,31 @@ export default function HomeForm() {
       // Access the document ID
       const data = docSnapshot.data();
       const sessionCount = Object.keys(data).filter(key => key.startsWith('Session')).length;
-      await updateDoc(docRef, {
-        [`Session ${String(sessionCount + 1)}`]: {
-          name,
-          secondDropdown,
-          yap: textareaValue ? textareaValue : audioURL,
+      if (secondDropdown !== "Nope, this is a new yap session") {
+        console.log("WORKED!")
+        const docRef2 = doc(db, "yaps", name.toLowerCase());
+        try {
+          await updateDoc(docRef2, {
+            [`${secondDropdown}.yap`]: textareaValue ? textareaValue : audioURL,
+
+          }); 
+        } catch (error) {
+          console.error("Error updating document: ", error);
         }
-      });  
+      }
+      else {
+        try {
+          await updateDoc(docRef, {
+            [`Session ${String(sessionCount + 1)}`]: {
+              name,
+              secondDropdown,
+              yap: textareaValue ? textareaValue : audioURL,
+            }
+          });  
+        } catch (error) {
+          console.error("Error updating session count: ", error);
+        }
+      }
     } else {
       try {
         await setDoc(docRef, {
@@ -89,7 +107,6 @@ export default function HomeForm() {
       }
     } 
   }
-
 
   //add onChangeName feature
   const onChangeName = async (newName: string) => {
@@ -115,7 +132,7 @@ export default function HomeForm() {
           <Image src="/teabag.png" alt="Teabag logo" width="192" height="192" quality="95"></Image>
         </div>
 
-        <form onSubmit={onSubmit} className="mt-5 flex flex-col gap-3">
+        <form className="mt-5 flex flex-col gap-3">
           <label className="flex flex-col">
             Yapper's name
             <input
