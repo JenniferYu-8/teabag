@@ -25,15 +25,6 @@ export default function HomeForm() {
     setAudioURL(URL.createObjectURL(recordedBlob.blob));
   };
 
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-    console.log({
-      name,
-      secondDropdown,
-      audioURL: useTextarea ? textareaValue : audioURL,
-    });
-  };
-
   //backend starts here
   const db = getFirestore(app);
   const yapsCollectionRef = collection(db, "yaps");
@@ -46,7 +37,7 @@ export default function HomeForm() {
 
   //add feature
   const onSubmit = async (e: { preventDefault: () => void; }) => {
-    const docRef = doc(db, "yaps", "james");
+    const docRef = doc(db, "yaps", name.toLowerCase());
     const docSnapshot = await getDoc(docRef);
 
     if (docSnapshot.exists()) {
@@ -75,7 +66,21 @@ export default function HomeForm() {
       }
     } 
   }
-  
+
+
+  //add onChangeName feature
+  const onChangeName = async (newName: string) => {
+    console.log("we are running");
+    const docRef = doc(db, "yaps", newName.toLowerCase());
+    const docSnapshot = await getDoc(docRef);
+    if (docSnapshot.exists()) {
+      // Access the document data
+      const data = docSnapshot.data();
+      const sessionCount = Object.keys(data);
+      console.log(sessionCount);
+    }
+  };
+    
   return (
     <section>
       <div className="flex flex-col items-center justify-center text-center">
@@ -83,14 +88,18 @@ export default function HomeForm() {
           <Image src="/teabag.png" alt="Teabag logo" width="192" height="192" quality="95"></Image>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-5 flex flex-col gap-3">
+        <form onSubmit={onSubmit} className="mt-5 flex flex-col gap-3">
           {/* Dropdown 1 */}
           <label className="flex flex-col">
             Enter your name:
             <input
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                const newName = e.target.value;
+                setName(newName);
+                onChangeName(newName); // Pass the new name to the function
+              }}
               required
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
               placeholder="Enter your name"
@@ -109,6 +118,7 @@ export default function HomeForm() {
               <option value="" disabled>
                 Select...
               </option>
+              
               <option value="new-yap">Nope, this is a new yap session</option>
               <option value="yap-1">Yap 1</option>
             </select>
@@ -169,7 +179,7 @@ export default function HomeForm() {
           )}
           <br />
 
-          <button type="submit" onClick={onSubmit}>Submit</button>
+          <button type="submit">Submit</button>
         </form>
       </div>
 
