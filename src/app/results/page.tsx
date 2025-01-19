@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { getFirestore, doc, getDoc, deleteField, updateDoc } from "firebase/firestore";
 import {useSearchParams} from "next/navigation";
 import app from "../../../firebase/clientApp"; // Ensure this is correctly imported
 
@@ -51,14 +51,28 @@ export default function Page() {
   return (
     <section className="bg-gray-100 min-h-screen p-6">
       <div className="max-w-4xl mx-auto mt-10 bg-gray-100 shadow-lg rounded-lg p-6 space-y-6">
-        <h1 className="text-3xl font-semibold text-gray-800">De-yappified story {yapData.name}</h1>
+        <h1 className="text-3xl font-semibold text-gray-800">De-yappified story {yapData.name} with a yap score of {yapData.results.percentage.toFixed(2)}%</h1>
         <div className="space-y-4 mb-5">
           <p className="text-gray-600">{yapData.results.yap}</p>
 
         </div>
       </div>
       <div className="flex items-center justify-center mt-10">
-        <button >
+        <button 
+          onClick={async () => { // doesn't work
+            try {
+              const db = getFirestore(app);
+              const docRef = doc(db, "yaps", yapData.name.toLowerCase());
+              await updateDoc(docRef, {
+                results: deleteField(), // Removes the 'results' field
+              });
+              alert("Yap data successfully removed!");
+            } catch (error) {
+              console.error("Error removing yap data: ", error);
+              alert("Failed to remove yap data.");
+            }
+          }}
+        >
           <a href="/"
             className="px-4 py-2 mt-4 text-sm font-medium text-white bg-[#C2D02F] rounded-md hover:bg-[#AFBC29]"
           >Go back</a>
