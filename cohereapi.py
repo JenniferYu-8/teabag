@@ -48,7 +48,7 @@ def chatbot():
     response = co.chat(
         model="command-r-plus",  # Adjust this model to one that's best for your needs
         messages=[
-        {"role": "user", "content": "You are an expert at reorganizing confusing stories.\nThe following story is very long and unorganized\n" + yap + "\nReorganize the story into a coherent, chronological sequence without changing the original wording and tone. Keep the same manner of speech, just reassemble the story in a way that makes sense."}]
+        {"role": "user", "content": "You are an expert at reorganizing confusing stories.\nThe following story is very long and unorganized\n" + yap + "\nReorganize the story into a coherent, chronological sequence without changing the original wording and tone. Keep the same manner of speech, just reassemble the story in a way that makes sense." + "\n MAKE SURE THAT YOU DON'T CHANGE ANY WORDING OR SAY ANYTHING ADDITIONAL THAN WHAT IS GIVEN TO YOU AND DONT CUT SENTENCES OR CHANGE, KEEP THE SENTENCES THE EXACT SAME, JUST REORDER, EVEN IF IT DOESNT MAKE SENSE"}]
     )
 
     # Return the response from Cohere API as JSON
