@@ -9,8 +9,8 @@ import { ReactMic } from "react-mic";
 import { BsFillTrashFill } from "react-icons/bs";
 import { BsFillStopCircleFill } from "react-icons/bs";
 import { BsFillRecordFill } from "react-icons/bs";
-import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition'
-// import "../src/app/globals.css";
+import 'regenerator-runtime/runtime';
+import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition'// import "../src/app/globals.css";
 import Link from "next/link";
 
 export default function HomeForm() {
@@ -35,9 +35,20 @@ export default function HomeForm() {
   const {
     transcript, 
     listening, 
-    resetTranscript,
+    resetTranscript, 
     browserSupportsSpeechRecognition
   } = useSpeechRecognition()
+
+  const startListening = () => {
+    setIsRecording(true);
+    SpeechRecognition.startListening({ continuous: true });
+  };
+  
+  const stopListening = () => {
+    setIsRecording(false);
+    SpeechRecognition.stopListening();
+  };
+  
 
   const generatePercentage = (inputString: string, cohereString: string) => {
     const sentenceRegex = /([.!?])\s+/;
@@ -100,14 +111,13 @@ export default function HomeForm() {
     }
 
     setIsLoading(true); // Start loading
-
     //checks fetching the reordered shit
     const response = await fetch('http://127.0.0.1:5000/', {
       method: 'POST',
       headers: {
           'Content-Type': 'application/json',
       },
-      body: JSON.stringify({yap: textareaValue ? textareaValue : audioURL }),
+      body: JSON.stringify({yap: textareaValue ? textareaValue : transcript}),
     });
 
     const result = await response.json();
@@ -123,7 +133,7 @@ export default function HomeForm() {
               //this one is getting the previous shit addded to the new shit
               const docRef2 = doc(db, "yaps", name.toLowerCase())
               const fieldValue = docSnapshot.data()[secondDropdown]?.yap;
-              const combinedValue = `${fieldValue} ${textareaValue || audioURL}`;
+              const combinedValue = `${fieldValue} ${textareaValue || transcript}`;
               console.log(combinedValue)
               
               //calls api to make new updated thingy
@@ -159,7 +169,7 @@ export default function HomeForm() {
               }
             }
             else {
-              const percentage = 100 - generatePercentage(textareaValue ? textareaValue : audioURL, result);
+              const percentage = 100 - generatePercentage(textareaValue ? textareaValue : transcript, result);
               console.log(percentage);        
               try {
                 await updateDoc(docRef, {
@@ -186,7 +196,7 @@ export default function HomeForm() {
 
             }
           } else {
-            const percentage = 100 - generatePercentage(textareaValue ? textareaValue : audioURL, result);
+            const percentage = 100 - generatePercentage(textareaValue ? textareaValue : transcript, result);
             console.log(percentage);        
             try {
               await setDoc(docRef, {
@@ -302,7 +312,7 @@ export default function HomeForm() {
               <div className="flex gap-16 mt-2 w-100">
                 <button
                   type="button"
-                  onClick={SpeechRecognition.startListening()}
+                  onClick={startListening}
                   disabled={isRecording}
                   className="px-4 py-2 bg-[#C2D02F] text-black rounded hover:bg-[#AFBC29] disabled:bg-gray-300 shadow-md"
                 >
@@ -310,7 +320,7 @@ export default function HomeForm() {
                 </button>
                 <button
                   type="button"
-                  onClick={() => setIsRecording(false)}
+                  onClick={stopListening}
                   disabled={!isRecording}
                   className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-gray-300 shadow-md"
                 >
