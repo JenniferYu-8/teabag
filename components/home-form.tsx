@@ -29,6 +29,53 @@ export default function HomeForm() {
     setAudioURL(URL.createObjectURL(recordedBlob.blob));
   };
 
+  const generatePercentage = (inputString: string, cohereString: string) => {
+    const sentenceRegex = /([.!?])\s+/;
+  
+    // Split the inputString into sentences
+    const inputSentences = inputString.split(sentenceRegex).filter(Boolean);
+    let inputResult: string[] = [];
+    for (let i = 0; i < inputSentences.length; i += 2) {
+      const sentence = inputSentences[i] + (inputSentences[i + 1] || '');
+      inputResult.push(sentence.trim());
+    }
+  
+    // Split the cohereString into sentences
+    const cohereSentences = cohereString.split(sentenceRegex).filter(Boolean);
+    let cohereResult: string[] = [];
+    for (let i = 0; i < cohereSentences.length; i += 2) {
+      const sentence = cohereSentences[i] + (cohereSentences[i + 1] || '');
+      cohereResult.push(sentence.trim());
+    }
+  
+    let similarCount = 0;
+    let totalCount = 0;
+  
+    // Compare sentences
+    const minLength = Math.min(inputResult.length, cohereResult.length);
+    for (let i = 0; i < minLength; i++) {
+      // Get the sentences, use empty string if one array is shorter
+      const inputSentence = inputResult[i] || "";
+      const cohereSentence = cohereResult[i] || "";
+  
+      // Compare sentences and count similarity
+      if (inputSentence === cohereSentence) {
+        similarCount++;
+      }
+      totalCount++;
+    }
+  
+    // Calculate percentage of similarity
+    const percentage = (similarCount / totalCount) * 100;
+  
+    console.log(`Similar sentences: ${similarCount}`);
+    console.log(`Total comparisons: ${totalCount}`);
+    console.log(`Similarity percentage: ${percentage.toFixed(2)}%`);
+  
+    return percentage;  // Optionally return the percentage
+  };
+  
+  
   const onSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault(); // Prevent form submission and page reload
 
@@ -75,7 +122,8 @@ export default function HomeForm() {
                 body: JSON.stringify({yap: combinedValue}),
               });
           
-              const result = await response.json();          
+              const result = await response.json(); 
+              const percentage = 100 - generatePercentage(combinedValue, result); 
               console.log("WORKED!")
               //updates the yap on the same drop down
               try {
@@ -90,6 +138,7 @@ export default function HomeForm() {
                 await updateDoc(docRef2, {
                   "results": {
                     yap: result,
+                    percentage
                   }
                 });  
               } catch (error) {
@@ -97,6 +146,8 @@ export default function HomeForm() {
               }
             }
             else {
+              const percentage = 100 - generatePercentage(textareaValue ? textareaValue : audioURL, result);
+              console.log(percentage);        
               try {
                 await updateDoc(docRef, {
                   [`Session ${String(sessionCount + 1)}`]: {
@@ -113,6 +164,7 @@ export default function HomeForm() {
                 await updateDoc(docRef, {
                   "results": {
                     yap: result,
+                    percentage
                   }
                 });  
               } catch (error) {
@@ -121,6 +173,8 @@ export default function HomeForm() {
 
             }
           } else {
+            const percentage = 100 - generatePercentage(textareaValue ? textareaValue : audioURL, result);
+            console.log(percentage);        
             try {
               await setDoc(docRef, {
               "Session 1": {
@@ -138,6 +192,7 @@ export default function HomeForm() {
               await updateDoc(docRef, {
                 "results": {
                   yap: result,
+                  percentage
                 }
               });  
             } catch (error) {
