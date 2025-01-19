@@ -49,18 +49,21 @@ export default function Page() {
   }
 
   return (
-    <section className="bg-gray-50 min-h-screen p-6">
-      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 space-y-6">
-        <h1 className="text-3xl font-semibold text-gray-800">Results for {yapData.name}</h1>
-        <ul className="space-y-4">
-          {Object.keys(yapData).map((sessionKey) => (
-            <li key={sessionKey} className="bg-gray-100 p-4 rounded-lg shadow-sm">
-              <h2 className="text-xl font-medium text-gray-700">{sessionKey}</h2>
-              <p className="text-gray-600">{yapData[sessionKey].yap}</p>
-            </li>
-          ))}
-        </ul>
+    <section className="bg-gray-100 min-h-screen p-6">
+      <div className="max-w-4xl mx-auto mt-10 bg-gray-100 shadow-lg rounded-lg p-6 space-y-6">
+        <h1 className="text-3xl font-semibold text-gray-800">De-yappified story {yapData.name}</h1>
+        <div className="space-y-4 mb-5">
+          <p className="text-gray-600">{yapData.results.yap}</p>
+
+        </div>
       </div>
+      <div className="flex items-center justify-center mt-10">
+        <button >
+          <a href="/"
+            className="px-4 py-2 mt-4 text-sm font-medium text-white bg-[#C2D02F] rounded-md hover:bg-[#AFBC29]"
+          >Go back</a>
+        </button>
+      </div >
     </section>
   );
 }

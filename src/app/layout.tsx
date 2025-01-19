@@ -20,7 +20,7 @@ export default function RootLayout({
   // Only render HomeForm if we're on the homepage, not on /results
   return (
     <html lang="en">
-      <body className={`${fb.className} bg-[#E3B491] text-gray-950 pt-16`}>
+      <body className={`${fb.className} bg-gray-100 text-gray-950`}>
         {pathname === '/' && <HomeForm />}  {/* Render HomeForm only on the homepage */}
         {children}
       </body>
