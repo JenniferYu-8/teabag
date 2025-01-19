@@ -1,41 +1,44 @@
-"use client";
+"use client"
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation"; // Import useSearchParams to get query parameters
 import { getFirestore, doc, getDoc } from "firebase/firestore";
-import app from "../../../firebase/clientApp"; // Adjust the path based on your project structure
+import {useSearchParams} from "next/navigation";
+import app from "../../../firebase/clientApp"; // Ensure this is correctly imported
 
 export default function Page() {
-  const [yapData, setYapData] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-
+  const [yapData, setYapData] = useState<any>(null); // to store fetched data
+  const [loading, setLoading] = useState(true); // to manage loading state
+  
   const searchParams = useSearchParams();
-  const name = searchParams.get("name"); // Extract the 'name' parameter from the query string
+  const name = searchParams.get("name"); // Extract name from query params
 
   useEffect(() => {
-    // Fetch data only if 'name' is available in the query
-    if (!name) return;
+    if (!name) return; // If name is not present, do nothing
 
     const fetchData = async () => {
       try {
-        const db = getFirestore(app);
-        const docRef = doc(db, "yap", Array.isArray(name) ? name[0].toLowerCase() : name.toLowerCase()); // Handle case where 'name' might be an array
-        const docSnapshot = await getDoc(docRef);
-
-        if (docSnapshot.exists()) {
-          setYapData(docSnapshot.data());
+        const db = getFirestore(app); // Initialize Firestore
+        const docRef = doc(db, "yaps", name.toLowerCase()); // Reference to the document
+        console.log("Fetching data for:", name);
+        
+        const docSnap = await getDoc(docRef); // Fetch document snapshot
+        
+        if (docSnap.exists()) {
+          setYapData(docSnap.data()); // Set data if document exists
+          console.log("Document data:", docSnap.data());
         } else {
           console.log("No such document!");
         }
       } catch (error) {
-        console.error("Error fetching data: ", error);
+        console.error("Error fetching data:", error);
       } finally {
-        setLoading(false);
+        setLoading(false); // Set loading to false after fetch
       }
     };
 
-    fetchData();
-  }, [name]); // Re-run the effect when 'name' changes
+    fetchData(); // Call the async fetchData function
+
+  }, [name]); // Re-run when 'name' changes
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen text-lg">Loading...</div>;
@@ -61,6 +64,7 @@ export default function Page() {
     </section>
   );
 }
+
 
 
 
