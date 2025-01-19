@@ -59,13 +59,23 @@ export default function Page() {
       </div>
       <div className="flex items-center justify-center mt-10">
         <button 
-          onClick={async () => { // doesn't work
+          onClick={async () => { 
+            console.log("Deleting data for:", yapData.name);
+            console.log("Deleting:", yapData.results);
+
             try {
-              const db = getFirestore(app);
-              const docRef = doc(db, "yaps", yapData.name.toLowerCase());
+              const name = searchParams.get("name"); // Extract name from query params
+              const db = getFirestore(app); // Initialize Firestore
+              const docRef = doc(db, "yaps", yapData.name.toLowerCase()); // Reference the document
+
+              console.log("Deleting data for:", yapData.name);
+              console.log("Deleting data for:", yapData.results);
+
+              // Proceed to delete the 'results' field
               await updateDoc(docRef, {
-                results: deleteField(), // Removes the 'results' field
+                results: deleteField(), // Remove the 'results' field
               });
+
               alert("Yap data successfully removed!");
             } catch (error) {
               console.error("Error removing yap data: ", error);
