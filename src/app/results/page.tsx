@@ -65,21 +65,20 @@ export default function Page() {
 
             try {
               const name = searchParams.get("name"); // Extract name from query params
+              if (!name) return;
               const db = getFirestore(app); // Initialize Firestore
-              const docRef = doc(db, "yaps", yapData.name.toLowerCase()); // Reference the document
+              const docRef = doc(db, "yaps", name.toLowerCase()); // Reference the document
 
               console.log("Deleting data for:", yapData.name);
               console.log("Deleting data for:", yapData.results);
 
               // Proceed to delete the 'results' field
               await updateDoc(docRef, {
-                results: deleteField(), // Remove the 'results' field
+                "results": deleteField(), // Remove the 'results' field
               });
 
-              alert("Yap data successfully removed!");
             } catch (error) {
               console.error("Error removing yap data: ", error);
-              alert("Failed to remove yap data.");
             }
           }}
         >
