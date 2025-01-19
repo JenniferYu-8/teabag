@@ -20,6 +20,7 @@ export default function HomeForm() {
   const [useTextarea, setUseTextarea] = useState(false);
   const [textareaValue, setTextareaValue] = useState("");
   const [sessionsForUser, setSessionsForUser] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter(); // Ensure you call it inside a page component
 
   const db = getFirestore(app);
@@ -89,6 +90,9 @@ export default function HomeForm() {
       alert("Please record audio or enter text.");
       return;
     }
+
+    setIsLoading(true); // Start loading
+
     //checks fetching the reordered shit
     const response = await fetch('http://127.0.0.1:5000/', {
       method: 'POST',
@@ -202,6 +206,7 @@ export default function HomeForm() {
 
           } 
 
+    setIsLoading(false); // Stop loading once the result is returned
     // After successful submission, redirect to results page
     // router.push(`/results`);
     router.push(`/results?name=${name}`);
@@ -226,6 +231,12 @@ export default function HomeForm() {
 
   return (
     <section>
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-100 z-50">
+          <Image src="/brewing.png" alt="Teabag brewing" width="150" height="150" quality="95" className="mt-5 animate-bounce"></Image>
+          {/* <div className="text-white text-xl">Loading...</div> */}
+        </div>
+      )}
       <div className="flex flex-col items-center justify-center">
          <div>
            <Image src="/teabag2.png" alt="Teabag logo" width="192" height="192" quality="95" className="mt-5"></Image>
