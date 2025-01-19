@@ -9,6 +9,7 @@ import { ReactMic } from "react-mic";
 import { BsFillTrashFill } from "react-icons/bs";
 import { BsFillStopCircleFill } from "react-icons/bs";
 import { BsFillRecordFill } from "react-icons/bs";
+import SpeechRecognition, {useSpeechRecognition} from 'react-speech-recognition'
 // import "../src/app/globals.css";
 import Link from "next/link";
 
@@ -29,6 +30,13 @@ export default function HomeForm() {
     setIsRecording(false);
     setAudioURL(URL.createObjectURL(recordedBlob.blob));
   };
+
+  const {
+    transcript, 
+    listening, 
+    resetTranscript,
+    browserSupportsSpeechRecognition
+  } = useSpeechRecognition()
 
   const generatePercentage = (inputString: string, cohereString: string) => {
     const sentenceRegex = /([.!?])\s+/;
@@ -277,13 +285,13 @@ export default function HomeForm() {
               <ReactMic
                 record={isRecording}
                 onStop={handleStopRecording}
-                mimeType="audio/webm"
+                mimeType="audio/wav"
                 className="w-[160] h-12 rounded-md shadow-md"
               />
               <div className="flex gap-16 mt-2 w-100">
                 <button
                   type="button"
-                  onClick={handleStartRecording}
+                  onClick={SpeechRecognition.startListening()}
                   disabled={isRecording}
                   className="px-4 py-2 bg-[#C2D02F] text-black rounded hover:bg-[#AFBC29] disabled:bg-gray-300 shadow-md"
                 >
