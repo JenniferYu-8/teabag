@@ -1,4 +1,4 @@
-
+import 'regenerator-runtime/runtime';
 require('dotenv').config();
 
 export default function Home() {

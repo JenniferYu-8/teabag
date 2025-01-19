@@ -4,6 +4,7 @@ import { Fuzzy_Bubbles } from 'next/font/google';
 import "./globals.css";
 import HomeForm from "../../components/home-form";
 import { usePathname } from 'next/navigation';  // Import to get current path
+import 'regenerator-runtime/runtime';
 
 const fb = Fuzzy_Bubbles({
   subsets: ["latin"],
