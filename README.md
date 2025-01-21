@@ -16,3 +16,6 @@ See the Yap Rating 🔍: Want to see how much you (or your friend) yaps? Check o
 
 # How It Works
 The app uses LangChain for data processing and the Cohere API to run language models. Once you submit your audio or text, Teabag gets to work, providing an instant summary of what you said/wrote. 
+
+# Video Demonstration
+[Youtube Link](https://youtu.be/iEaeeSaUmQk?si=u4dQ9RrQeeCXygfA)
